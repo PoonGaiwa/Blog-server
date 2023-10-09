@@ -11,6 +11,7 @@ const path = require('path');
 const createError = require('http-errors');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const cors = require('cors')
 
 const indexRouter = require('./routes/index');
 const getPubKeyRouter = require('./routes/getPubKey')
@@ -27,6 +28,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors({
+  "origin": true,     // true为req.origin
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+  "preflightContinue": false,     // next() 是否传递options请求
+  "optionsSuccessStatus": 204,
+  "credentials": true,          // 开启cookie跨域
+  "maxAge": 172800,
+}))
+
 
 app.use('/user', indexRouter);
 app.use('/getPublicKey', getPubKeyRouter);
