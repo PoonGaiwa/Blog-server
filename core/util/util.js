@@ -9,7 +9,7 @@
 const path = require('path')
 const fs = require('fs').promises
 const NodeRSA = require('node-rsa')
-const { priKeyPath, pubKeyPath } = require('../config')
+const { priKeyPath, pubKeyPath } = require('../../config')
 
 // generateKeys()
 async function generateKeys() {
