@@ -17,6 +17,7 @@
     "http-errors": "~1.6.3",
     "inflection": "^3.0.0",
     "mongoose": "^7.6.1",
+    "mongoose-sex-page": "^1.2.4",
     "morgan": "~1.9.1",
     "node-rsa": "^1.1.1"
   }

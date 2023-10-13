@@ -2,18 +2,14 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-12 23:54:02
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-13 17:40:25
+ * @LastEditTime: 2023-10-13 21:55:42
  * @FilePath: \myBlog_server\routes\bus.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 const express = require('express')
 const router = express.Router()
 const createError = require('http-errors');
-
-
-// /api/rest/:resource?query
-// /api/rest/users?query
-// /api/rest/articles?query
+const pagination = require('../core/util/util')
 
 // 创建资源
 router.post('/', async (req, res) => {
@@ -43,9 +39,13 @@ router.delete('/:id', async (req, res) => {
 
 // 查询资源列表
 router.get('/', async (req, res) => {
-  // const queryOptions = {}
-  const items = await req.Model.find()
-  res.send(items)
+  const { options = {}, page = 1, size = 100, query = {}, dis = 8 } = req.body
+  try {
+    let result = await pagination({ model: req.Model, query, options, size, page, dis })
+    res.send(result)
+  } catch (error) {
+    next(createError(422, '请求错误'))
+  }
 })
 
 // 查询资源详情
