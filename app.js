@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-09 15:07:42
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-13 18:13:03
+ * @LastEditTime: 2023-10-13 18:52:17
  * @FilePath: \myBlog_server\myblog_server\app.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -16,7 +16,6 @@ const mongoose = require('./plugins/db');
 
 // const indexRouter = require('./routes/index');
 // const getPubKeyRouter = require('./routes/getPubKey')
-// const registerRouter = require('./routes/register')
 const app = express();
 app.use(cors({
   "origin": true,     // true为req.origin
@@ -38,11 +37,13 @@ const resourceMiddleware = require('./middleware/resource')
 // 路由 nameRoute
 const busRoute = require('./routes/bus')
 const loginRoute = require('./routes/login')
+const registerRoute = require('./routes/register')
 
 
 // 路由入口
-app.use('/login', loginRoute);
 app.use('/api/rest/:resource', resourceMiddleware(), busRoute)
+app.use('/admin/login', loginRoute);
+app.use('/admin/register', registerRoute);
 
 
 
@@ -50,7 +51,6 @@ app.use('/api/rest/:resource', resourceMiddleware(), busRoute)
 
 // app.use('/user', indexRouter);
 // app.use('/getPublicKey', getPubKeyRouter);
-// app.use('/register', registerRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
