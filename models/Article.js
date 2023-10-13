@@ -8,7 +8,7 @@ const schema = mongoose.Schema({
   },
   // 封面图
   cover: {
-    type: String,
+    type: String,      // URL
   },
   // 文章内容
   body: {
