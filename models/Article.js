@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const schema = new mongoose.Schema({
+const schema = mongoose.Schema({
   // 标题
   title: {
     type: String,
@@ -32,13 +32,13 @@ const schema = new mongoose.Schema({
     default: 0
   },
   author: {
-    type: mongoose.SchemaType.ObjectId,
+    type: mongoose.SchemaTypes.ObjectId,
     ref: 'User'
   },
   // 评论集合
   comments: [
     {
-      type: mongoose.SchemaType.ObjectId,
+      type: mongoose.SchemaTypes.ObjectId,
       ref: 'Comment'
     }
   ],
@@ -49,3 +49,5 @@ const schema = new mongoose.Schema({
     default: '技术文章'
   }
 })
+
+module.exports = mongoose.model('Article', schema)

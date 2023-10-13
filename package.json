@@ -13,12 +13,11 @@
     "express": "~4.16.1",
     "express-jwt": "^6.0.0",
     "hbs": "~4.0.4",
+    "http-assert": "^1.5.0",
     "http-errors": "~1.6.3",
-    "mongoose": "^7.6.1",
-    "morgan": "~1.9.1"
-  },
-  "devDependencies": {
     "inflection": "^3.0.0",
+    "mongoose": "^7.6.1",
+    "morgan": "~1.9.1",
     "node-rsa": "^1.1.1"
   }
 }

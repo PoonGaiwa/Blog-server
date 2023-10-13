@@ -2,7 +2,7 @@
  * @Author: gaiwa gaiwa@163.com
  * @Date: 2023-09-27 16:05:20
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-07 16:12:13
+ * @LastEditTime: 2023-10-13 18:17:15
  * @FilePath: \express\myBlog\core\userControl.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -17,7 +17,7 @@
 const fs = require('fs').promises
 const { userPath } = require('../config')
 const { getUserStatusMsg } = require('./statusControl')
-const { encrypt, decrypt } = require('../util/util')
+const { encrypt, decrypt } = require('../core/util/util')
 
 module.exports = {
   async addUser(username, pwd) {

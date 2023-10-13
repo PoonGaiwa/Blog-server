@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-09 15:09:01
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-09 15:30:05
+ * @LastEditTime: 2023-10-13 15:37:55
  * @FilePath: \myBlog_server\core\rsaControl.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -15,9 +15,8 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 const fsSync = require('fs')
-const fs = require('fs').promises
 const { pubKeyPath, priKeyPath } = require('../config')
-const { generateKeys } = require('../util/util')
+const { generateKeys } = require('./util/util')
 
 module.exports = {
   getPublicKeySync() {
@@ -30,23 +29,23 @@ module.exports = {
     }
     return key
   },
-  async getPublicKey() {
+  getPublicKey() {
     let key
     try {
-      key = await fs.readFile(pubKeyPath, 'utf8')
+      key = fsSync.readFileSync(pubKeyPath, 'utf8')
     } catch (err) {
       generateKeys()
-      key = await fs.readFile(pubKeyPath, 'utf8')
+      key = fsSync.readFileSync(pubKeyPath, 'utf8')
     }
     return key
   },
-  async getPrivateKey() {
+  getPrivateKey() {
     let key
     try {
-      key = await fs.readFile(priKeyPath, 'utf8')
+      key = fsSync.readFileSync(priKeyPath, 'utf8')
     } catch (err) {
       generateKeys()
-      key = await fs.readFile(priKeyPath, 'utf8')
+      key = fsSync.readFileSync(priKeyPath, 'utf8')
     }
     return key
   }

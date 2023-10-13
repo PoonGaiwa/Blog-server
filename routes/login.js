@@ -2,7 +2,7 @@
  * @Author: gaiwa gaiwa@163.com
  * @Date: 2023-09-27 21:39:04
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-08 19:02:54
+ * @LastEditTime: 2023-10-13 18:32:12
  * @FilePath: \express\myBlog\routes\login.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -11,25 +11,37 @@ const router = express.Router();
 const userControl = require('../core/userControl');
 const { getUserStatusMsg } = require('../core/statusControl')
 const { sendToken } = require('../core/sendToken')
+const assert = require('http-assert')
+const User = require('../models/User')
+const createError = require('http-errors');
+const { encrypt, decrypt } = require('../core/util/util')
+
 
 /* GET users listing. */
 router.post('/', async function (req, res, next) {
-  let { username, pwd } = req.body
-  let result = await userControl.verifyUser(username, pwd)
-  // 如果验证账号密码失败
-  if (result.statusCode !== getUserStatusMsg('USER_INN').statusCode) {
-    res.send(200, { ...result })
-    return
-  }
-  // 如果验证成功 签发Token
-  if (result.statusCode === '4020' && result.data) {
-    let token = await sendToken(result)
+  let { username, password } = req.body
+  console.log(username, password);
+  try {
+    if (!username || username?.trim()?.length === 0 || !password || password?.trim()?.length === 0) {
+      assert(false, 422, "账号密码必填")
+    }
+    const user = await User.findOne({ username }).select('+password')
+    assert(user, 422, "用户不存在")
+    // 校验密码
+    assert.equal(password, decrypt(decrypt(user.password)), 422, '账号密码错误')
+    // 生成token
+    let token = await sendToken(user)
     res.send(200, {
-      ...getUserStatusMsg('USER_LOGIN'),
       data: {
-        token
+        message: '登录成功',
+        data: {
+          userId: user._id,
+          token: token
+        }
       }
     })
+  } catch (error) {
+    console.log(error);
   }
 });
 
