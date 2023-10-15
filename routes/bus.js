@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-12 23:54:02
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-15 10:49:14
+ * @LastEditTime: 2023-10-15 14:56:54
  * @FilePath: \myBlog_server\routes\bus.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -14,32 +14,38 @@ const Article = require('../models/Article')
 const Column = require('../models/Column')
 const Comment = require('../models/Comment')
 const POPULATE_MAP = require('../plugins/POPULATE_MAP')
+const POP_CT_MAP = require('../plugins/POP_CT_MAP');
+const assert = require('http-assert');
 // 创建资源 提交文章，评论
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   console.log(req);
   try {
     const model = await req.Model.create(req.body)
     let modelName = req.Model.modelName
-    if (modelName === 'Comment') {
-      let cid = model._id
-      let { aid } = req.body
-      await Article.findByIdAndUpdate(aid, { '$push': { comments: cid } })
+    console.log(req.body);
+    if (modelName in POP_CT_MAP) {
+      let item = POP_CT_MAP[modelName]
+      let { _refId, _model, queryAct, options } = item
+      let _id = model._id
+      let refId = req.body?.[_refId]
+      console.log(refId);
+      assert(refId, 422, `${_refId}必填`)
+      await _model[queryAct](refId, options(_id))
     }
     res.send(model)
-  } catch (error) {
-    console.log(error);
-    // next(createError(400), "请求错误")
+  } catch (err) {
+    next(err || createError(400), "请求错误")
   }
 })
 // 更新资源
 // /api/rest/articles/fhdsjafjks/query?...
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req, res, next) => {
   const model = await req.Model.findByIdAndUpdate(req.params.id, req.body)
   res.send(model)
 })
 
 // 删除资源
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
   await req.Model.findByIdAndDelete(req.params.id)
   res.send({
     errMsg: 'Ok'
@@ -47,7 +53,7 @@ router.delete('/:id', async (req, res) => {
 })
 
 // 查询资源列表
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   const { options = {}, page = 1, size = 100, query = {}, dis = 8 } = req.body
   try {
     let result = await pagination({ model: req.Model, query, options, size, page, dis })
@@ -59,16 +65,13 @@ router.get('/', async (req, res) => {
 })
 
 // 查询资源详情
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   let modelName = req.Model.modelName
   try {
     let querys = await req.Model.findById(req.params.id)
     if (modelName in POPULATE_MAP) {
       let populates = POPULATE_MAP[modelName]
-      console.log(populates);
-      for (let i = 0, item; item = populates[i++];) {
-        querys = await querys.populate(item['field'], item['select'])
-      }
+      querys = await querys.populate(populates)
       res.send(querys)
     }
   } catch (err) {
