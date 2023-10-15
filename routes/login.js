@@ -2,7 +2,7 @@
  * @Author: gaiwa gaiwa@163.com
  * @Date: 2023-09-27 21:39:04
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-13 19:32:52
+ * @LastEditTime: 2023-10-15 11:36:44
  * @FilePath: \express\myBlog\routes\login.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -23,7 +23,7 @@ router.post('/', async function (req, res, next) {
     const user = await User.findOne({ username }).select('+password')
     assert(user, 422, "用户不存在")
     // 校验密码
-    assert.equal(password, decrypt(decrypt(user.password)), 422, '账号密码错误')
+    assert.equal(password, decrypt(decrypt(user.password)), '账号密码错误')
     // 生成token
     let token = await sendToken(user)
     res.send(200, {
