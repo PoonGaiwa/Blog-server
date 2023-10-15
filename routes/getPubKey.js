@@ -16,11 +16,9 @@ const assert = require('http-assert')
 router.get('/', async function (req, res, next) {
   let result = await Key.findOne()
   res.send(200, {
+    message: 'ok',
     data: {
-      message: 'ok',
-      data: {
-        pubKey: result.content
-      }
+      pubKey: result.content
     }
   })
 });
