@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-15 22:26:17
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-16 10:06:37
+ * @LastEditTime: 2023-10-16 19:16:46
  * @FilePath: \myBlog_server\routes\admin.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -34,14 +34,14 @@ router.post('/:classify', async function (req, res, next) {
     let user
     if (classify === 'login') {
       user = await User.findOne({ username }).select('+password')
+      console.log(user);
       assert(user, 422, "用户不存在")
       // 校验密码
-      assert.equal(password, decrypt(decrypt(user.password.trim())), 422, '账号密码错误')
+      assert.equal(decrypt(password), decrypt(decrypt(user.password.trim())), 422, '账号密码错误')
     }
     if (classify === 'register') {
-      // 模拟前端密码加密一次，存入数据库时触发set又加密一次
-      user = await User.create({ username: username, password: (password.trim()), email, nickname, avatar })
-
+      // 前端传来的数据已经经过一次加密
+      user = await User.create({ username: username, password: password, email, nickname, avatar })
     }
     // 生成token
     let token = await sendToken(user)

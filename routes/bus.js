@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-12 23:54:02
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-15 22:23:18
+ * @LastEditTime: 2023-10-16 13:56:40
  * @FilePath: \myBlog_server\routes\bus.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -37,7 +37,7 @@ router.post('/', async (req, res, next) => {
     }
     res.send(result)
   } catch (err) {
-    next(err || createError(400), "请求错误")
+    next(err || createError(422), "请求错误")
   }
 })
 // 更新资源
@@ -50,14 +50,14 @@ router.put('/:id', async (req, res, next) => {
   try {
     let { revisable, authField } = POP_PUT_MAP[modelName]
     let isValidate = (modelName in POP_PUT_MAP) && isPass
-    assert(isValidate, 400, '无权修改')
+    assert(isValidate, 422, '无权修改')
     let findData = await req.Model.findById(id)
-    assert.equal(id, findData[authField], 400, '无权修改')
+    assert.equal(id, findData[authField], 422, '无权修改')
     let updateData = Object.fromEntries(Object.entries(putData).filter(([key, value]) => {
       return revisable.includes(key)
     }))
     isValidate = Object.keys(updateData).length !== 0
-    assert(isValidate, 400, '修改失败')
+    assert(isValidate, 422, '修改失败')
     updateData['date'] = new Date().toISOString()
     await req.Model.findByIdAndUpdate(id, updateData)
     res.send(200, {
@@ -71,8 +71,8 @@ router.put('/:id', async (req, res, next) => {
 // 删除资源
 router.delete('/:id', async (req, res, next) => {
   await req.Model.findByIdAndDelete(req.params.id)
-  res.send({
-    errMsg: 'Ok'
+  res.send(200, {
+    message: '删除成功'
   })
 })
 
@@ -81,7 +81,10 @@ router.get('/', async (req, res, next) => {
   const { options = {}, page = 1, size = 100, query = {}, dis = 8 } = req.body
   try {
     let result = await pagination({ model: req.Model, query, options, size, page, dis })
-    res.send(result)
+    res.send(200, {
+      message: '查询成功',
+      data: result
+    })
   } catch (err) {
     next(err);
   }

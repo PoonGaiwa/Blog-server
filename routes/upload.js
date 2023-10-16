@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-13 22:08:27
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-13 23:27:42
+ * @LastEditTime: 2023-10-16 13:55:41
  * @FilePath: \myBlog_server\routes\upload.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -46,7 +46,7 @@ router.post('/:classify', upload.single('file'), (req, res, next) => {
   try {
     // 过滤fileType 
     let fileType = FILE_TYPE[req.params['classify']] ?? ''
-    assert(fileType, 400, '文件上传分类不正确')
+    assert(fileType, 422, '文件上传分类不正确')
     let { uid } = req.body
     if (fileType === 'user') {
       assert(uid, 422, '用户头像必须指定UID')

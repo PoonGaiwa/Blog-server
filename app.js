@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-09 15:07:42
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-16 12:10:31
+ * @LastEditTime: 2023-10-16 19:18:29
  * @FilePath: \myBlog_server\myblog_server\app.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -20,6 +20,13 @@ const QMAP = require('./plugins/QUE_MAP')
 
 // const indexRouter = require('./routes/index');
 const app = express();
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+//开放静态地址
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'uploads')));
 app.use(cors({
   "origin": true,     // true为req.origin
   "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
@@ -28,14 +35,6 @@ app.use(cors({
   "credentials": true,          // 开启cookie跨域
   "maxAge": 172800,
 }))
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-//开放静态地址
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'uploads')));
-
 // 中间件 nameMiddleware
 const resourceMiddleware = require('./middleware/resource')
 // 路由 nameRoute
@@ -70,6 +69,7 @@ app.use(expressJwt({
     { url: '/api/rest/comments', methods: ['GET', 'POST'] },
     { url: '/api/rest/columns', methods: ['GET'] },
     { url: '/api/rest/articles', methods: ['GET'] },
+    { url: '/api/rest/keys', methods: ['POST'] },
     { url: '/key', methods: ['GET'] },
     { url: '/admin/login' },
     { url: '/admin/register' },
@@ -117,7 +117,7 @@ app.use(function (err, req, res, next) {
 
   if (err.message.indexOf('duplicate key error') !== -1) {
     let repeatKey = Object.entries(err.keyPattern).map(([key, value]) => {
-      return `${QMAP[key]}已经存在`
+      return `${QMAP[key]}已经注册`
     })[0]
     err.status = 422
     err.message = repeatKey
@@ -138,6 +138,9 @@ app.use(function (err, req, res, next) {
   if (err.status in ERROR_STATUS_MAP) {
     err.message = ERROR_STATUS_MAP[err.status]
   }
+
+  // console.log(err);
+
   res.status(err.status || 500).send({
     code: err.status,
     message: err.message
