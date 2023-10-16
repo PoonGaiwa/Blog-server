@@ -1,3 +1,11 @@
+/*
+ * @Author: Gaiwa 13012265332@163.com
+ * @Date: 2023-10-15 22:26:17
+ * @LastEditors: Gaiwa 13012265332@163.com
+ * @LastEditTime: 2023-10-16 10:06:37
+ * @FilePath: \myBlog_server\routes\admin.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 const express = require('express');
 const router = express.Router();
 const assert = require('http-assert')
@@ -15,7 +23,7 @@ const CLASSIFY = {
 
 /* GET users listing. */
 router.post('/:classify', async function (req, res, next) {
-  let { username, password, email, avatar, nikname } = req.body
+  let { username, password, email, avatar, nickname } = req.body
   let { classify } = req.params
   let isClassPass = classify in CLASSIFY
   assert(isClassPass, 400, '无效请求')
@@ -28,11 +36,11 @@ router.post('/:classify', async function (req, res, next) {
       user = await User.findOne({ username }).select('+password')
       assert(user, 422, "用户不存在")
       // 校验密码
-      assert.equal(password, user.password, '账号密码错误')
+      assert.equal(password, decrypt(decrypt(user.password.trim())), 422, '账号密码错误')
     }
     if (classify === 'register') {
       // 模拟前端密码加密一次，存入数据库时触发set又加密一次
-      user = await User.create({ username: username, password: password.trim(), email, nikname, avatar })
+      user = await User.create({ username: username, password: (password.trim()), email, nickname, avatar })
 
     }
     // 生成token
@@ -46,25 +54,6 @@ router.post('/:classify', async function (req, res, next) {
     })
     next()
   } catch (err) {
-    // if (classify === 'register') {
-    //   let repeatKey
-    //   if (err.message.indexOf('duplicate key error') !== -1) {
-    //     repeatKey = Object.entries(err.keyPattern).map(([key, value]) => {
-    //       return `${QMAP[key]}已经存在`
-    //     })[0]
-    //     res.send(createError(422, repeatKey))
-    //   } else {
-    //     console.log(err);
-    //     // 其他报错提示
-    //     repeatKey = Object.entries(err.errors).map(([key, val]) => {
-    //       return `${val.message}`;
-    //     }).reduce((a, c) => {
-    //       a += c
-    //       return a
-    //     }, "")
-    //   }
-    //   res.send(createError(422, repeatKey))
-    // }
     next(err);
   }
 });

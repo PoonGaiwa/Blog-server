@@ -9,7 +9,7 @@
 module.exports = {
   "Article": [{
     "path": "author",
-    "select": "nikname avatar"
+    "select": "nickname avatar"
   },
   {
     "path": "column", "select": "name"
@@ -19,23 +19,23 @@ module.exports = {
     "select": "content date uid",
     "populate": {
       "path": "uid",
-      "select": "nikname avatar"
+      "select": "nickname avatar"
     }
   }],
   "Comment": [{
     "path": "_id",
-    "select": "nikname avatar"
+    "select": "nickname avatar"
   }],
   "User": [{
     "path": "username",
-    "select": "nikname avatar username email"
+    "select": "nickname avatar username email"
   }],
   "Column": [{
     "path": "aid",
     "select": "title cover author hits_num like_num comment_num date",
     "populate": {
       "path": "author",
-      "select": "nikname avatar"
+      "select": "nickname avatar"
     }
   }],
 }

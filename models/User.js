@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-12 21:03:35
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-15 23:25:29
+ * @LastEditTime: 2023-10-16 10:27:46
  * @FilePath: \express\mongoose\test\db.user.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -30,7 +30,7 @@ const schema = mongoose.Schema({
     required: [true, '密码必填'],
     validate: {
       validator: function (val) {
-        return /[a-zA-Z][a-zA-Z0-9_]+/.test(val)
+        return /[a-zA-Z][a-zA-Z0-9_]{5,16}/.test(val)
       },
       message: '请输入正确用户名'
     },
@@ -47,7 +47,7 @@ const schema = mongoose.Schema({
     },
     set(val) {
       //触发器
-      let isValidate = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[#?!@$%^&*-_])[a-zA-Z0-9_#?!@$%^&*-]{8,12}$/.test(val)
+      let isValidate = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[#?!@$%^&*-_])[a-zA-Z0-9_#?!@$%^&*-]{8,16}$/.test(val)
       if (isValidate) {
         return encrypt(val)
       }
@@ -68,13 +68,13 @@ const schema = mongoose.Schema({
     type: String,
     default: './logo.jpg'
   },
-  nikname: {
+  nickname: {
     type: String,
     validate: {
       validator: function (val) {
         return /^([\da-zA-Z\u0391-\uFFE5]{1,8})$/.test(val)
       },
-      message: '请输入昵称'
+      message: '昵称可包含 数字/英文/汉字 1-8位'
     },
     default: '无名氏'
   }
@@ -88,7 +88,7 @@ module.exports = mongoose.model('User', schema)
 //   username: 'panpan',
 //   password: 'MG7RaO0n8L8xdJHplzfnuiItSb6wk+uQyFOFLn2N0crdG4j9AIC8IjC4za51dD5+3gvbagpzgXEo+kvLjwrLLSNmHCPpSYljNxnxFUrgt45I+6bk+nuRV0UCNE1Db/VPsV8/rMx4LDz+ySBgC7rIe4RNOy1I46fxVEHg/9SPQm0=',
 //   email: "4654654654@163.com",
-//   nikname: 'zhangsan'
+//   nickname: 'zhangsan'
 // }).then(data => {
 //   console.log(data);
 // }).catch(err => {

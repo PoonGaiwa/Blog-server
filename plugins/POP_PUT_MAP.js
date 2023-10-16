@@ -16,7 +16,7 @@ module.exports = {
     "authField": "author"
   },
   "User": {
-    "revisable": ["password", "email", "nikname"],
+    "revisable": ["password", "email", "nickname"],
     "authField": "_id"
   },
   "Comment": {

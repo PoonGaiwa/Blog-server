@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-09 15:07:42
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-15 22:59:54
+ * @LastEditTime: 2023-10-16 12:10:31
  * @FilePath: \myBlog_server\myblog_server\app.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -70,11 +70,11 @@ app.use(expressJwt({
     { url: '/api/rest/comments', methods: ['GET', 'POST'] },
     { url: '/api/rest/columns', methods: ['GET'] },
     { url: '/api/rest/articles', methods: ['GET'] },
-    { url: '/api/rest/keys', methods: ['GET'] },
+    { url: '/key', methods: ['GET'] },
     { url: '/admin/login' },
     { url: '/admin/register' },
-    { url: '/search' },
-    { url: '/likes' },
+    { url: '/articles/search' },
+    { url: /^\/articles\/likes\/.*/, methods: ['POST'] }
   ]
 }))
 
@@ -92,10 +92,10 @@ app.use('/key', pubKeyRoute);
 app.use('/upload', uploadRoute)
 
 // 文章搜索
-app.use('/search', searchRoute)
+app.use('/articles/search', searchRoute)
 
 // 文章点赞
-app.use('/likes', artLikesRoute)
+app.use('/articles/likes', artLikesRoute)
 
 const ERROR_CODE_MAP = {
   'LIMIT_FILE_SIZE': `文件大小不得超过${maxFileSize}字节`,
