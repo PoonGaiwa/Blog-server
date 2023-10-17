@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-13 22:08:27
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-16 13:55:41
+ * @LastEditTime: 2023-10-17 23:24:40
  * @FilePath: \myBlog_server\routes\upload.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -34,7 +34,6 @@ const storage = multer.diskStorage({
   }
 })
 
-
 const upload = multer({
   storage,
   limits: {
@@ -53,13 +52,22 @@ router.post('/:classify', upload.single('file'), (req, res, next) => {
     }
     let { destination, filename } = req.file
     let fileUrl = path.join(uploadURL, path.parse(destination).name, filename).replace(/\\/g, '/').replace('http:/', 'http://')
-    res.send(200, {
+    let resultDate = {
       message: '上传成功',
+      errorno: 0,
       data: {
         filename,
         fileUrl
       }
-    })
+    }
+    if (fileType === 'article') {
+      let data = [fileUrl]
+      resultDate = {
+        "errno": 0,
+        data
+      }
+    }
+    res.send(200, resultDate)
   } catch (err) {
     next(err)
   }
