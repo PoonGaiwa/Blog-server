@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-09 15:07:42
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-16 19:18:29
+ * @LastEditTime: 2023-10-17 14:49:56
  * @FilePath: \myBlog_server\myblog_server\app.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -66,9 +66,11 @@ app.use(expressJwt({
   }
 }).unless({
   path: [
+    { url: /^\/api\/rest\/.*/, methods: ['GET', 'POST'] },
     { url: '/api/rest/comments', methods: ['GET', 'POST'] },
     { url: '/api/rest/columns', methods: ['GET'] },
     { url: '/api/rest/articles', methods: ['GET'] },
+    { url: /^\/api\/rest\/articles\/.*/, methods: ['GET'] },
     { url: '/api/rest/keys', methods: ['POST'] },
     { url: '/key', methods: ['GET'] },
     { url: '/admin/login' },
@@ -139,7 +141,7 @@ app.use(function (err, req, res, next) {
     err.message = ERROR_STATUS_MAP[err.status]
   }
 
-  // console.log(err);
+  console.log(err);
 
   res.status(err.status || 500).send({
     code: err.status,
