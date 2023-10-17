@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-09 15:07:42
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-17 14:49:56
+ * @LastEditTime: 2023-10-17 17:35:17
  * @FilePath: \myBlog_server\myblog_server\app.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -17,6 +17,7 @@ const maxFileSize = require('./config');
 const expressJwt = require('express-jwt');
 const { getPublicKeySync } = require('./core/rsaControl')
 const QMAP = require('./plugins/QUE_MAP')
+const assert = require('http-assert')
 
 // const indexRouter = require('./routes/index');
 const app = express();
@@ -44,7 +45,8 @@ const pubKeyRoute = require('./routes/getPubKey')
 const uploadRoute = require('./routes/upload')
 const searchRoute = require('./routes/search')
 const artLikesRoute = require('./routes/artLikes');
-const User = require('./models/User')
+const User = require('./models/User');
+const { send } = require('process');
 
 app.use(expressJwt({
   secret: getPublicKeySync(),
@@ -54,6 +56,7 @@ app.use(expressJwt({
     let { user_id } = payload    // iax是unix时间戳，单位是秒
     req._id = user_id
     req.isPass = true
+    console.log(req.isPass);
     try {
       let result = await User.findById(req._id)
       if (!result) {
@@ -86,6 +89,18 @@ app.use('/api/rest/:resource', resourceMiddleware(), busRoute)
 
 // 登录 注册
 app.use('/admin', adminRoute);
+
+app.use('/index', (req, res, next) => {
+  console.log(req.isPass);
+  try {
+    assert(req.isPass, 401, '请先登录')
+    res.send(200, {
+      message: 'ok'
+    })
+  } catch (err) {
+    next(err)
+  }
+})
 
 // 获取公钥
 app.use('/key', pubKeyRoute);
