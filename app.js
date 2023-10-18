@@ -134,7 +134,8 @@ app.use(function (err, req, res, next) {
 
   if (err.message.indexOf('duplicate key error') !== -1) {
     let repeatKey = Object.entries(err.keyPattern).map(([key, value]) => {
-      return `${QMAP[key]}已经注册`
+      console.log(key);
+      return `${QMAP[key]}已存在`
     })[0]
     err.status = 422
     err.message = repeatKey

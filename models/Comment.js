@@ -10,7 +10,7 @@ const mongoose = require('mongoose')
 const schema = mongoose.Schema({
   content: {
     type: String,
-    required: true
+    required: [true, '内容不能为空']
   },
   // 更新日期
   date: {

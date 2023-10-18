@@ -3,5 +3,6 @@ module.exports = {
   'password': '密码',
   'email': '邮箱',
   'nickname': '昵称',
-  'avatar': '头像'
+  'avatar': '头像',
+  'name': '分类'
 }

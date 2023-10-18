@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-12 23:42:09
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-17 12:35:53
+ * @LastEditTime: 2023-10-18 19:37:25
  * @FilePath: \myBlog_server\models\Article.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -13,8 +13,8 @@ const schema = mongoose.Schema({
   // 标题
   title: {
     type: String,
-    required: true,
-    default: "默认标题" + Date.now
+    required: [true, '标题不能为空'],
+    default: "默认标题"
   },
   // 封面图
   cover: {
@@ -24,7 +24,7 @@ const schema = mongoose.Schema({
   // 文章内容
   content: {
     type: String,        // URIencode(HTMLCode)
-    required: true,
+    required: [true, '内容不能为空'],
     set(val) {
       try {
         return decodeURIComponent(val).replace(/\"/g, "\'")
@@ -64,7 +64,7 @@ const schema = mongoose.Schema({
   column: {
     type: String,
     ref: 'Column',
-    default: '652b4e7077610226fd0151db'
+    default: '652fad7609e81f183b254ca4'
   }
 })
 
