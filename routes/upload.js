@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-13 22:08:27
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-17 23:24:40
+ * @LastEditTime: 2023-10-18 11:37:51
  * @FilePath: \myBlog_server\routes\upload.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -41,7 +41,7 @@ const upload = multer({
   }
 })
 
-router.post('/:classify', upload.single('file'), (req, res, next) => {
+router.post('/:classify', upload.any(), (req, res, next) => {
   try {
     // 过滤fileType 
     let fileType = FILE_TYPE[req.params['classify']] ?? ''
@@ -50,18 +50,18 @@ router.post('/:classify', upload.single('file'), (req, res, next) => {
     if (fileType === 'user') {
       assert(uid, 422, '用户头像必须指定UID')
     }
-    let { destination, filename } = req.file
-    let fileUrl = path.join(uploadURL, path.parse(destination).name, filename).replace(/\\/g, '/').replace('http:/', 'http://')
+    let fileUrls = req.files.map(item => {
+      let { destination, filename } = item
+      return path.join(uploadURL, path.parse(destination).name, filename).replace(/\\/g, '/').replace('http:/', 'http://')
+    })
     let resultDate = {
       message: '上传成功',
-      errorno: 0,
       data: {
-        filename,
-        fileUrl
+        fileURL: fileUrls[0]
       }
     }
     if (fileType === 'article') {
-      let data = [fileUrl]
+      let data = fileUrls
       resultDate = {
         "errno": 0,
         data
