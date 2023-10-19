@@ -43,7 +43,8 @@ router.post('/', async (req, res, next) => {
       await _model.findByIdAndUpdate(refId, options(_id))
     }
     res.send(200, {
-      message: '提交成功',
+      statusCode: 200,
+      message: '创建成功',
       data: { id: result._id }
     })
   } catch (err) {
@@ -71,6 +72,7 @@ router.put('/:id', async (req, res, next) => {
     updateData['date'] = new Date().toISOString()
     await req.Model.findByIdAndUpdate(id, updateData)
     res.send(200, {
+      statusCode: 200,
       message: '修改成功'
     })
   } catch (err) {
@@ -82,6 +84,7 @@ router.put('/:id', async (req, res, next) => {
 router.delete('/:id', async (req, res, next) => {
   await req.Model.findByIdAndDelete(req.params.id)
   res.send(200, {
+    statusCode: 200,
     message: '删除成功'
   })
 })
@@ -96,6 +99,7 @@ router.get('/', async (req, res, next) => {
     }
     let result = await pagination({ model: req.Model, query, options, populate, size, page, dis })
     res.send(200, {
+      statusCode: 200,
       message: '查询成功',
       data: result
     })
@@ -115,6 +119,7 @@ router.get('/:id', async (req, res, next) => {
       querys = querys.populate(populates)
       querys = await querys.exec()
       res.send(200, {
+        statusCode: 200,
         message: '查询成功',
         data: querys
       })
