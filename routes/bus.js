@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-12 23:54:02
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-19 13:44:08
+ * @LastEditTime: 2023-10-19 23:56:05
  * @FilePath: \myBlog_server\routes\bus.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -30,6 +30,7 @@ router.post('/', async (req, res, next) => {
   try {
     let modelName = req.Model.modelName
     let body = req.body
+    console.log(req);
     if (modelName in RESOURCE_POST_MAP) {
       body = RESOURCE_POST_MAP[modelName]['body'](body, req._id)
     }
@@ -44,7 +45,7 @@ router.post('/', async (req, res, next) => {
     }
     res.send(200, {
       statusCode: 200,
-      message: '创建成功',
+      message: '添加成功',
       data: { id: result._id }
     })
   } catch (err) {

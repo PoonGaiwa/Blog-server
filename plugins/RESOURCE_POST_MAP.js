@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-15 13:41:34
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-19 16:55:38
+ * @LastEditTime: 2023-10-19 23:46:28
  * @FilePath: \myBlog_server\plugins\POP_CT_MAP.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -16,7 +16,7 @@ module.exports = {
     "body": function (body, _id) {
       return {
         ...body,
-        author: _id
+        id: _id
       }
     }
   },
@@ -24,7 +24,15 @@ module.exports = {
     "body": function (body, _id) {
       return {
         ...body,
-        uid: _id
+        id: _id
+      }
+    }
+  },
+  "Comment": {
+    "body": function (body, _id) {
+      return {
+        ...body,
+        id: _id
       }
     }
   }

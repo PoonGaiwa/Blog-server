@@ -2,13 +2,14 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-12 21:03:35
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-16 19:26:54
+ * @LastEditTime: 2023-10-19 18:31:04
  * @FilePath: \express\mongoose\test\db.user.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 const mongoose = require('mongoose')
 const { encrypt, decrypt } = require('../core/util/util')
 const assert = require('http-assert')
+const { uploadURL } = require('../config')
 
 
 const schema = mongoose.Schema({
@@ -55,7 +56,7 @@ const schema = mongoose.Schema({
   },
   avatar: {
     type: String,
-    default: './logo.jpg'
+    default: `${uploadURL}user/默认头像.webp`
   },
   nickname: {
     type: String,
