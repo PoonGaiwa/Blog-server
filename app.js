@@ -56,7 +56,6 @@ app.use(expressJwt({
     let { user_id } = payload    // iax是unix时间戳，单位是秒
     req._id = user_id
     req.isPass = true
-    console.log(req.isPass);
     try {
       let result = await User.findById(req._id)
       if (!result) {
@@ -91,7 +90,6 @@ app.use('/api/rest/:resource', resourceMiddleware(), busRoute)
 app.use('/admin', adminRoute);
 
 app.use('/index', (req, res, next) => {
-  console.log(req.isPass);
   try {
     assert(req.isPass, 401, '请先登录')
     res.send(200, {
@@ -134,7 +132,6 @@ app.use(function (err, req, res, next) {
 
   if (err.message.indexOf('duplicate key error') !== -1) {
     let repeatKey = Object.entries(err.keyPattern).map(([key, value]) => {
-      console.log(key);
       return `${QMAP[key]}已存在`
     })[0]
     err.status = 422

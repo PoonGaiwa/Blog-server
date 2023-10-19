@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-12 23:54:02
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-17 15:24:06
+ * @LastEditTime: 2023-10-19 13:44:08
  * @FilePath: \myBlog_server\routes\bus.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -21,6 +21,8 @@ const RESOURCE_POST_MAP = require('../plugins/RESOURCE_POST_MAP')
 const POP_PUT_MAP = require('../plugins/POP_PUT_MAP');
 const assert = require('http-assert');
 const { model } = require('mongoose');
+const mongoPage = require('mongoose-sex-page')
+const qs = require('qs')
 
 
 // 创建资源 提交文章，评论
@@ -34,11 +36,11 @@ router.post('/', async (req, res, next) => {
     const result = await req.Model.create(body)
     if (modelName in POP_POST_MAP) {
       let item = POP_POST_MAP[modelName]
-      let { _refId, queryAct, options } = item
+      let { _refId, options, _model } = item
       let _id = result._id
       let refId = result?.[_refId]
       assert(refId, 422, `${_refId}必填`)
-      await req.Model[queryAct](refId, options(_id))
+      await _model.findByIdAndUpdate(refId, options(_id))
     }
     res.send(200, {
       message: '提交成功',
@@ -86,7 +88,7 @@ router.delete('/:id', async (req, res, next) => {
 
 // 查询资源列表
 router.get('/', async (req, res, next) => {
-  let { options = {}, page = 1, size = 100, query = {}, dis = 8, populate = {} } = req.body
+  let { options = {}, page = 1, size = 100, query = {}, dis = 8, populate = {} } = req
   let modelName = req.Model.modelName
   try {
     if (modelName in POPULATE_MAP) {

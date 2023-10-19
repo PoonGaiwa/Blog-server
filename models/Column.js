@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-12 23:42:09
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-18 17:52:50
+ * @LastEditTime: 2023-10-18 21:59:12
  * @FilePath: \myBlog_server\models\Column.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -34,6 +34,7 @@ const schema = mongoose.Schema({
   // 创建者
   uid: {
     type: mongoose.SchemaTypes.ObjectId,
+    ref: 'User'
   }
 })
 
