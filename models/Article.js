@@ -2,13 +2,14 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-12 23:42:09
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-19 00:45:13
+ * @LastEditTime: 2023-10-20 01:11:44
  * @FilePath: \myBlog_server\models\Article.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 
 const mongoose = require('mongoose')
 const { uploadURL } = require('../config')
+const { formatDate } = require('../core/util/util')
 const schema = mongoose.Schema({
   // 标题
   title: {
@@ -35,7 +36,10 @@ const schema = mongoose.Schema({
   },
   date: {
     type: mongoose.SchemaTypes.Date,
-    default: Date.now
+    default: Date.now,
+    get(val) {
+      return formatDate(new Date(val), 'MM-dd')
+    }
   },
   hits_num: {
     type: Number,
@@ -67,5 +71,5 @@ const schema = mongoose.Schema({
     default: '652fad7609e81f183b254ca4'
   }
 })
-
+schema.set('toJSON', { getters: true, virtuals: false });
 module.exports = mongoose.model('Article', schema)
