@@ -2,7 +2,7 @@
  * @Author: gaiwa gaiwa@163.com
  * @Date: 2023-09-27 15:39:21
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-20 00:52:29
+ * @LastEditTime: 2023-10-20 19:03:28
  * @FilePath: \express\myBlog\util\util.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -44,9 +44,7 @@ function decrypt(cipher) {
 }
 
 async function pagination({ model, query, options, populate = {}, size, page, dis }) {
-	if (typeof query.query === 'string') {
-		query = qs.parse(query.query)
-	}
+
 	let result = await mongoPage(model).find(query).select(options).sort({ '_id': -1 }).populate(populate).size(size).page(page).display(dis).exec()
 	let { total, records, pages, display } = result
 	let count = result.records.length
