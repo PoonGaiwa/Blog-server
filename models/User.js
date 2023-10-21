@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-12 21:03:35
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-19 18:31:04
+ * @LastEditTime: 2023-10-21 11:03:56
  * @FilePath: \express\mongoose\test\db.user.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -67,6 +67,10 @@ const schema = mongoose.Schema({
       message: '昵称可包含 数字/英文/汉字 1-8位'
     },
     default: '无名氏'
+  },
+  signature: {
+    type: String,
+    default: '这个人很懒，什么都没有写 ^_^'
   }
 })
 
