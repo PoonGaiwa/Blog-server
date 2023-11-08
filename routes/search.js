@@ -18,7 +18,6 @@ router.get('/', async (req, res, next) => {
   let modelName = 'Article'
   let { options = {}, page = 1, size = 100, query = {}, dis = 8, populate = {} } = req
   query = qs.parse(query.query)
-  console.log(query);
   let regExp = new RegExp(query.q, 'i')
   query = {
     '$or': [

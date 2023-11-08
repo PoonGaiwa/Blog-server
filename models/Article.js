@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-12 23:42:09
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-10-20 01:11:44
+ * @LastEditTime: 2023-11-08 11:43:24
  * @FilePath: \myBlog_server\models\Article.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -10,6 +10,7 @@
 const mongoose = require('mongoose')
 const { uploadURL } = require('../config')
 const { formatDate } = require('../core/util/util')
+const mongooseSexPage = require('mongoose-sex-page')
 const schema = mongoose.Schema({
   // 标题
   title: {
@@ -69,7 +70,13 @@ const schema = mongoose.Schema({
     type: mongoose.SchemaTypes.ObjectId,
     ref: 'Column',
     default: '652fad7609e81f183b254ca4'
-  }
+  },
+  like_users: [
+    {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'User'
+    }
+  ]
 })
 schema.set('toJSON', { getters: true, virtuals: false });
 module.exports = mongoose.model('Article', schema)

@@ -26,7 +26,6 @@ router.post('/', expressJwt({
     req.userID = user_id
 
     userControl.verifyTokenInfo(req.username, req.userID).then(result => {
-      console.log(result);
       if (result.statusCode === getUserStatusMsg('USER_FOND').statusCode) {
         next()
         return
