@@ -2,7 +2,7 @@
  * @Author: Gaiwa 13012265332@163.com
  * @Date: 2023-10-15 16:32:35
  * @LastEditors: Gaiwa 13012265332@163.com
- * @LastEditTime: 2023-11-08 13:21:04
+ * @LastEditTime: 2023-11-11 18:21:16
  * @FilePath: \myBlog_server\routes\artLikes.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -30,14 +30,16 @@ router.post('/:id', async (req, res, next) => {
   }
   next()
 }, async (req, res, next) => {
-  let id = req.params.id
+  let id = req.body.id
   let isLike = true
   let query = {}
   // true点赞 false取消点赞
-  if (req._id) {
+  if (id) {
     let article = await Article.findById(id)
     let likeUsers = article?.['like_users']
-    isLike = !(likeUsers.includes(id))
+    // 查看该文章的点赞用户列表是否存在当前用户
+    isLike = !(likeUsers.includes(req._id))
+    console.log(isLike);
     query[isLike ? '$addToSet' : '$pull'] = {
       like_users: req._id
     }
@@ -45,7 +47,6 @@ router.post('/:id', async (req, res, next) => {
   query['$inc'] = {
     like_num: isLike ? 1 : -1
   }
-  console.log(query);
   let result = await Article.findByIdAndUpdate(id, query)
   let likes = ++result.like_num
   res.send(200, {
